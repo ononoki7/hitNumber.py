@@ -1,0 +1,112 @@
+import random
+def helperRange():
+    ok = False
+    while(ok != True):
+        min_number = input("only integer: ")
+        max_number = input("choise over the before number. only integer: ")
+        try:
+            min_number = int(min_number)
+        except ValueError:
+            print("it is not integer")
+            continue 
+         
+        try:
+            max_number = int(max_number)
+        except ValueError:
+            print("it is not integer")
+            continue
+        
+        if min_number >= max_number:
+            print("error min_number or max_number is not integer or over min_number")
+            continue
+        else:
+            ok = True
+    return min_number,max_number
+        
+def helperCount(min_number,max_number):
+    ok = False
+    select_count = ""
+    while(ok != True):
+        select_count = input("How many charenge hit? over 0 and bigNmber - smallNumber not over: ")
+        try:
+            select_count = int(select_count)
+        except ValueError:
+            print("please integer")
+            continue
+        if select_count <= 0:
+            print("over 0 please")
+            continue
+        elif select_count > (max_number - min_number + 1):
+            print("over range") 
+        else:
+            ok = True
+    return select_count
+
+
+def hitNumberHelper(min_number,max_number,numbers_help,answer,count):
+    while(count > 0):
+        print("you residue is " + str(count) +  " you range is " + str(min_number) + " ~ " + str(max_number) + " you slect number is " + str(numbers_help))
+        response = input("what your answer?: ")
+        try:
+            response = int(response)
+        except ValueError:
+            print("not integer")
+            continue
+
+        if response == answer:
+            print("Amazing!")
+            return True,None,count
+            
+        if response > max_number or response < min_number:
+            print("it number over range")
+            continue
+        else:
+            if response in numbers_help:
+                print("it number no count")
+                continue
+            numbers_help.append(response)
+            print("it is worng number")
+            if count >= 2:   
+                hint = input("get hint?")
+                if hint == "yes":
+                    if response > answer:
+                        print("answer is small")
+                    else:
+                        print("answer is big")
+
+            count -= 1  
+    return False,answer,0
+
+def end(min_number,max_number,count,answer,won,score):
+    if won:
+        score += (max_number - min_number + 1) + (count)
+        return score
+    else:
+        print("answer is " + str(answer))
+        return score
+
+def playHit():
+    finish = False
+    score = 0
+    play = 0
+    
+    while(finish != True):
+        print("hello. please choises two number. play: " + str(play) + " score: " + str(score))
+        min_number,max_number = helperRange()
+        select_count = helperCount(min_number,max_number)
+        print("The answer lies between the small and large numbers")
+        print ("you give chance for " + str(select_count))
+        print("what you find answer?")
+        numbers_help = []
+        answer = random.randint(min_number,max_number)
+        won,answer,count = hitNumberHelper(min_number,max_number,numbers_help,answer,select_count)
+        
+        score = end(min_number,max_number,count,answer,won,score)
+        play += 1
+        doretry = input("play again? ")
+        if doretry == "yes":
+            continue
+        else:
+            print("Thank you for playing. play: " + str(play) + " score: " + str(score))
+            finish = True
+playHit()
